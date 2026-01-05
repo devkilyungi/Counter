@@ -8,8 +8,28 @@
 import ComposableArchitecture
 import Foundation
 
-struct CatFactResponse: Decodable {
+nonisolated struct CatFactResponse: Decodable, Sendable {
     let fact: String
+}
+
+struct FactClient {
+    var fetch: @Sendable () async throws -> String
+}
+
+extension FactClient: DependencyKey {
+    static let liveValue = FactClient {
+        let url = URL(string: "https://catfact.ninja/fact")!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let decoded = try JSONDecoder().decode(CatFactResponse.self, from: data)
+        return decoded.fact
+    }
+}
+
+extension DependencyValues {
+    nonisolated var factClient: FactClient {
+        get { self[FactClient.self] }
+        set { self[FactClient.self] = newValue }
+    }
 }
 
 private nonisolated enum CancelID: Hashable, Sendable {
@@ -20,7 +40,7 @@ struct CounterFeature: Reducer {
     struct State: Equatable {
         var count = 0
         var fact: String?
-        var isLoadingFact: Bool = false
+        var isLoadingFact = false
         var isTimerOn = false
     }
 
@@ -34,6 +54,9 @@ struct CounterFeature: Reducer {
         case timerTicked
     }
 
+    @Dependency(\.continuousClock) var clock
+    @Dependency(\.factClient) var factClient
+
     var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
@@ -45,14 +68,14 @@ struct CounterFeature: Reducer {
                 state.fact = nil
                 state.isLoadingFact = true
 
-                return .run { @MainActor send in
+                let fetch = self.factClient.fetch
+
+                return .run { send in
                     do {
-                        let url = URL(string: "https://catfact.ninja/fact")!
-                        let (data, _) = try await URLSession.shared.data(from: url)
-                        let decoded = try JSONDecoder().decode(CatFactResponse.self, from: data)
-                        send(.factResponse(decoded.fact))
+                        let fact = try await fetch()
+                        await send(.factResponse(fact))
                     } catch {
-                        send(.factFailed(error.localizedDescription))
+                        await send(.factFailed(error.localizedDescription))
                     }
                 }
 
@@ -65,8 +88,7 @@ struct CounterFeature: Reducer {
 
                 if state.isTimerOn {
                     return .run { send in
-                        while !Task.isCancelled {
-                            try await Task.sleep(for: .seconds(1))
+                        for await _ in await self.clock.timer(interval: .seconds(1)) {
                             await send(.timerTicked)
                         }
                     }
