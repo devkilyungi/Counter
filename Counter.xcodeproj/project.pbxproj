@@ -6,15 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B16C84522F099ABF004B0774 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = B16C84512F099ABF004B0774 /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B16C84342F0999AA004B0774 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B16C841E2F0999A9004B0774 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B16C84252F0999A9004B0774;
-			remoteInfo = Counter;
-		};
-		B16C843E2F0999AA004B0774 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B16C841E2F0999A9004B0774 /* Project object */;
 			proxyType = 1;
@@ -26,7 +23,6 @@
 /* Begin PBXFileReference section */
 		B16C84262F0999A9004B0774 /* Counter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Counter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B16C84332F0999AA004B0774 /* CounterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CounterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B16C843D2F0999AA004B0774 /* CounterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CounterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,11 +36,6 @@
 			path = CounterTests;
 			sourceTree = "<group>";
 		};
-		B16C84402F0999AA004B0774 /* CounterUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CounterUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,17 +43,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B16C84522F099ABF004B0774 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B16C84302F0999AA004B0774 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B16C843A2F0999AA004B0774 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -77,7 +62,6 @@
 			children = (
 				B16C84282F0999A9004B0774 /* Counter */,
 				B16C84362F0999AA004B0774 /* CounterTests */,
-				B16C84402F0999AA004B0774 /* CounterUITests */,
 				B16C84272F0999A9004B0774 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,7 +71,6 @@
 			children = (
 				B16C84262F0999A9004B0774 /* Counter.app */,
 				B16C84332F0999AA004B0774 /* CounterTests.xctest */,
-				B16C843D2F0999AA004B0774 /* CounterUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -112,6 +95,7 @@
 			);
 			name = Counter;
 			packageProductDependencies = (
+				B16C84512F099ABF004B0774 /* ComposableArchitecture */,
 			);
 			productName = Counter;
 			productReference = B16C84262F0999A9004B0774 /* Counter.app */;
@@ -140,29 +124,6 @@
 			productReference = B16C84332F0999AA004B0774 /* CounterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B16C843C2F0999AA004B0774 /* CounterUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B16C844D2F0999AA004B0774 /* Build configuration list for PBXNativeTarget "CounterUITests" */;
-			buildPhases = (
-				B16C84392F0999AA004B0774 /* Sources */,
-				B16C843A2F0999AA004B0774 /* Frameworks */,
-				B16C843B2F0999AA004B0774 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B16C843F2F0999AA004B0774 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				B16C84402F0999AA004B0774 /* CounterUITests */,
-			);
-			name = CounterUITests;
-			packageProductDependencies = (
-			);
-			productName = CounterUITests;
-			productReference = B16C843D2F0999AA004B0774 /* CounterUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -180,10 +141,6 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = B16C84252F0999A9004B0774;
 					};
-					B16C843C2F0999AA004B0774 = {
-						CreatedOnToolsVersion = 26.2;
-						TestTargetID = B16C84252F0999A9004B0774;
-					};
 				};
 			};
 			buildConfigurationList = B16C84212F0999A9004B0774 /* Build configuration list for PBXProject "Counter" */;
@@ -195,6 +152,9 @@
 			);
 			mainGroup = B16C841D2F0999A9004B0774;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B16C84502F099ABF004B0774 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B16C84272F0999A9004B0774 /* Products */;
 			projectDirPath = "";
@@ -202,7 +162,6 @@
 			targets = (
 				B16C84252F0999A9004B0774 /* Counter */,
 				B16C84322F0999AA004B0774 /* CounterTests */,
-				B16C843C2F0999AA004B0774 /* CounterUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -216,13 +175,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B16C84312F0999AA004B0774 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B16C843B2F0999AA004B0774 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,13 +198,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B16C84392F0999AA004B0774 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -260,11 +205,6 @@
 			isa = PBXTargetDependency;
 			target = B16C84252F0999A9004B0774 /* Counter */;
 			targetProxy = B16C84342F0999AA004B0774 /* PBXContainerItemProxy */;
-		};
-		B16C843F2F0999AA004B0774 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B16C84252F0999A9004B0774 /* Counter */;
-			targetProxy = B16C843E2F0999AA004B0774 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -405,6 +345,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -417,7 +358,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -437,6 +378,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -449,7 +391,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -462,7 +404,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6GFVN7UDUJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilyungi.CounterTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,7 +426,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6GFVN7UDUJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilyungi.CounterTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -495,46 +437,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter";
-			};
-			name = Release;
-		};
-		B16C844E2F0999AA004B0774 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6GFVN7UDUJ;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kilyungi.CounterUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Counter;
-			};
-			name = Debug;
-		};
-		B16C844F2F0999AA004B0774 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6GFVN7UDUJ;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kilyungi.CounterUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Counter;
 			};
 			name = Release;
 		};
@@ -568,16 +470,26 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B16C844D2F0999AA004B0774 /* Build configuration list for PBXNativeTarget "CounterUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B16C844E2F0999AA004B0774 /* Debug */,
-				B16C844F2F0999AA004B0774 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B16C84502F099ABF004B0774 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.23.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B16C84512F099ABF004B0774 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B16C84502F099ABF004B0774 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B16C841E2F0999A9004B0774 /* Project object */;
 }

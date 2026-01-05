@@ -5,13 +5,16 @@
 //  Created by Victor Kilyungi on 03/01/2026.
 //
 
+import ComposableArchitecture
 import SwiftUI
 
 @main
 struct CounterApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(store: Store(initialState: CounterFeature.State()) {
+                CounterFeature()
+            })
         }
     }
 }
