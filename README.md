@@ -1,6 +1,6 @@
 # Counter
 
-A small SwiftUI counter app built with The Composable Architecture (TCA).
+A small SwiftUI counter app built with The Composable Architecture (TCA 1.23.1) and Swift 6.
 
 ## Features
 - Increment/decrement counter
