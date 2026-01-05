@@ -12,7 +12,7 @@ import SwiftUI
 struct CounterApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(store: Store(initialState: CounterFeature.State()) {
+            CounterView(store: Store(initialState: CounterFeature.State()) {
                 CounterFeature()
             })
         }

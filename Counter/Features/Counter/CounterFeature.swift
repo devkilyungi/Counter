@@ -8,30 +8,6 @@
 import ComposableArchitecture
 import Foundation
 
-nonisolated struct CatFactResponse: Decodable, Sendable {
-    let fact: String
-}
-
-struct FactClient {
-    var fetch: @Sendable () async throws -> String
-}
-
-extension FactClient: DependencyKey {
-    static let liveValue = FactClient {
-        let url = URL(string: "https://catfact.ninja/fact")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoded = try JSONDecoder().decode(CatFactResponse.self, from: data)
-        return decoded.fact
-    }
-}
-
-extension DependencyValues {
-    nonisolated var factClient: FactClient {
-        get { self[FactClient.self] }
-        set { self[FactClient.self] = newValue }
-    }
-}
-
 private nonisolated enum CancelID: Hashable, Sendable {
     case timer
 }
@@ -68,11 +44,9 @@ struct CounterFeature: Reducer {
                 state.fact = nil
                 state.isLoadingFact = true
 
-                let fetch = self.factClient.fetch
-
                 return .run { send in
                     do {
-                        let fact = try await fetch()
+                        let fact = try await self.factClient.fetch()
                         await send(.factResponse(fact))
                     } catch {
                         await send(.factFailed(error.localizedDescription))
