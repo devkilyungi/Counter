@@ -9,19 +9,23 @@ import ComposableArchitecture
 import SwiftUI
 
 struct CounterView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let store: StoreOf<CounterFeature>
 
     var body: some View {
         WithPerceptionTracking {
+            let palette = ThemePalette(scheme: colorScheme)
+
             AppCard {
                 VStack(spacing: 24) {
-                    CounterHeader(value: store.value)
+                    CounterHeader(value: store.value, palette: palette)
 
                     HStack(spacing: 28) {
                         AppIconCircleButton(
                             systemName: "minus",
                             label: "Decrement",
-                            tint: Theme.accentSoft
+                            tint: palette.accentSoft
                         ) {
                             store.send(.decrementTapped)
                         }
@@ -29,7 +33,7 @@ struct CounterView: View {
                         AppIconCircleButton(
                             systemName: "plus",
                             label: "Increment",
-                            tint: Theme.accentSoft
+                            tint: palette.accentSoft
                         ) {
                             store.send(.incrementTapped)
                         }
@@ -46,7 +50,7 @@ struct CounterView: View {
                         }
                         .buttonStyle(
                             AppCapsuleButtonStyle(
-                                background: store.isTimerRunning ? Theme.danger : Theme.accent,
+                                background: store.isTimerRunning ? palette.danger : palette.accent,
                                 foreground: .white
                             )
                         )
@@ -58,7 +62,7 @@ struct CounterView: View {
                         }
                         .buttonStyle(
                             AppCapsuleButtonStyle(
-                                background: Theme.neutralButton,
+                                background: palette.neutralButton,
                                 foreground: .white
                             )
                         )
@@ -66,7 +70,8 @@ struct CounterView: View {
 
                     CounterFactCard(
                         fact: store.factText,
-                        isLoading: store.isFactLoading
+                        isLoading: store.isFactLoading,
+                        palette: palette
                     ) {
                         store.send(.factButtonTapped)
                     }
@@ -78,17 +83,18 @@ struct CounterView: View {
 
 private struct CounterHeader: View {
     let value: Int
+    let palette: ThemePalette
 
     var body: some View {
         VStack(spacing: 8) {
             Text("Current Count")
                 .font(.system(.title3, design: .serif))
                 .fontWeight(.semibold)
-                .foregroundStyle(Theme.inkSubtle)
+                .foregroundStyle(palette.inkSubtle)
 
             Text("\(value)")
                 .font(.system(size: 64, weight: .black, design: .rounded))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(palette.ink)
                 .monospacedDigit()
         }
     }
@@ -97,6 +103,7 @@ private struct CounterHeader: View {
 private struct CounterFactCard: View {
     let fact: String?
     let isLoading: Bool
+    let palette: ThemePalette
     let action: () -> Void
 
     var body: some View {
@@ -104,7 +111,7 @@ private struct CounterFactCard: View {
             HStack {
                 Text("Cat Fact")
                     .font(.system(.headline, design: .serif))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(palette.ink)
 
                 Spacer()
 
@@ -118,23 +125,23 @@ private struct CounterFactCard: View {
                     }
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Theme.accent)
+                .tint(palette.accent)
                 .disabled(isLoading)
             }
 
             if let fact {
                 Text(fact)
                     .font(.subheadline)
-                    .foregroundStyle(Theme.inkSubtle)
+                    .foregroundStyle(palette.inkSubtle)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text("Tap the button to learn something new.")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.inkSubtle)
+                    .foregroundStyle(palette.inkSubtle)
             }
         }
         .padding(16)
-        .background(Theme.surfaceAlt)
+        .background(palette.surfaceAlt)
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }

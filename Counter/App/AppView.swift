@@ -70,11 +70,15 @@ struct PrimaryCounterTab: View {
 }
 
 struct OptionalCounterTab: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let store: StoreOf<AppFeature>
 
     var body: some View {
         WithPerceptionTracking {
             NavigationStack {
+                let palette = ThemePalette(scheme: colorScheme)
+
                 ScreenBackground {
                     ScrollView {
                         VStack(spacing: 24) {
@@ -97,7 +101,7 @@ struct OptionalCounterTab: View {
                             }
                             .buttonStyle(
                                 AppCapsuleButtonStyle(
-                                    background: Theme.accent,
+                                    background: palette.accent,
                                     foreground: .white
                                 )
                             )
@@ -112,15 +116,15 @@ struct OptionalCounterTab: View {
                                     VStack(spacing: 12) {
                                         Image(systemName: "questionmark.circle")
                                             .font(.system(size: 46))
-                                            .foregroundStyle(Theme.inkSubtle)
+                                            .foregroundStyle(palette.inkSubtle)
 
                                         Text("Counter state is nil")
                                             .font(.headline)
-                                            .foregroundStyle(Theme.ink)
+                                            .foregroundStyle(palette.ink)
 
                                         Text("Tap the button above to create it.")
                                             .font(.subheadline)
-                                            .foregroundStyle(Theme.inkSubtle)
+                                            .foregroundStyle(palette.inkSubtle)
                                     }
                                     .frame(maxWidth: .infinity)
                                 }
@@ -139,11 +143,15 @@ struct OptionalCounterTab: View {
 }
 
 struct CombinedCountersTab: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let store: StoreOf<AppFeature>
 
     var body: some View {
         WithPerceptionTracking {
             NavigationStack {
+                let palette = ThemePalette(scheme: colorScheme)
+
                 ScreenBackground {
                     ScrollView {
                         VStack(spacing: 24) {
@@ -156,11 +164,11 @@ struct CombinedCountersTab: View {
                                 VStack(spacing: 8) {
                                     Text("Total")
                                         .font(.system(.headline, design: .serif))
-                                        .foregroundStyle(Theme.inkSubtle)
+                                        .foregroundStyle(palette.inkSubtle)
 
                                     Text("\(store.combinedTotal)")
                                         .font(.system(size: 54, weight: .black, design: .rounded))
-                                        .foregroundStyle(Theme.ink)
+                                        .foregroundStyle(palette.ink)
                                         .monospacedDigit()
                                 }
                                 .frame(maxWidth: .infinity)
@@ -195,14 +203,18 @@ struct CombinedCountersTab: View {
 }
 
 private struct CounterSection: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let title: String
     let store: StoreOf<CounterFeature>
 
     var body: some View {
+        let palette = ThemePalette(scheme: colorScheme)
+
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
                 .font(.system(.headline, design: .serif))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(palette.ink)
 
             CounterView(store: store)
         }

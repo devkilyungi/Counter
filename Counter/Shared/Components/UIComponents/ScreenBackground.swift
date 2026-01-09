@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ScreenBackground<Content: View>: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let content: Content
 
     init(@ViewBuilder content: () -> Content) {
@@ -15,8 +17,10 @@ struct ScreenBackground<Content: View>: View {
     }
 
     var body: some View {
+        let palette = ThemePalette(scheme: colorScheme)
+
         ZStack {
-            Theme.backgroundGradient
+            palette.backgroundGradient
                 .ignoresSafeArea()
 
             content
@@ -31,9 +35,9 @@ struct ScreenBackground<Content: View>: View {
                 .font(.title2)
 
             RoundedRectangle(cornerRadius: 20)
-                .fill(Theme.surface)
+                .fill(ThemePalette(scheme: .light).surface)
                 .frame(height: 120)
-                .shadow(color: Theme.cardShadow, radius: 12, x: 0, y: 6)
+                .shadow(color: ThemePalette(scheme: .light).cardShadow, radius: 12, x: 0, y: 6)
         }
         .padding()
     }
@@ -46,9 +50,9 @@ struct ScreenBackground<Content: View>: View {
                 .font(.title2)
 
             RoundedRectangle(cornerRadius: 20)
-                .fill(Theme.surface)
+                .fill(ThemePalette(scheme: .dark).surface)
                 .frame(height: 120)
-                .shadow(color: Theme.cardShadow, radius: 12, x: 0, y: 6)
+                .shadow(color: ThemePalette(scheme: .dark).cardShadow, radius: 12, x: 0, y: 6)
         }
         .padding()
     }

@@ -8,18 +8,22 @@
 import SwiftUI
 
 struct ScreenHeader: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let title: String
     let subtitle: String
 
     var body: some View {
+        let palette = ThemePalette(scheme: colorScheme)
+
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.system(size: 32, weight: .bold, design: .serif))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(palette.ink)
 
             Text(subtitle)
                 .font(.subheadline)
-                .foregroundStyle(Theme.inkSubtle)
+                .foregroundStyle(palette.inkSubtle)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -31,7 +35,7 @@ struct ScreenHeader: View {
         subtitle: "A supportive subtitle that explains the section."
     )
     .padding()
-    .background(Theme.surface)
+    .background(ThemePalette(scheme: .light).surface)
 }
 
 #Preview("Dark") {
@@ -40,6 +44,6 @@ struct ScreenHeader: View {
         subtitle: "A supportive subtitle that explains the section."
     )
     .padding()
-    .background(Theme.surface)
+    .background(ThemePalette(scheme: .dark).surface)
     .preferredColorScheme(.dark)
 }

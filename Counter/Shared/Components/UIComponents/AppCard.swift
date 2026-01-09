@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AppCard<Content: View>: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let content: Content
 
     init(@ViewBuilder content: () -> Content) {
@@ -15,15 +17,17 @@ struct AppCard<Content: View>: View {
     }
 
     var body: some View {
+        let palette = ThemePalette(scheme: colorScheme)
+
         content
             .padding(20)
-            .background(Theme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .background(palette.surface)
+            .clipShape(RoundedRectangle(cornerRadius: palette.cornerRadius, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
-                    .stroke(Theme.surfaceAlt, lineWidth: 1)
+                RoundedRectangle(cornerRadius: palette.cornerRadius, style: .continuous)
+                    .stroke(palette.surfaceAlt, lineWidth: 1)
             )
-            .shadow(color: Theme.cardShadow, radius: 14, x: 0, y: 8)
+            .shadow(color: palette.cardShadow, radius: 14, x: 0, y: 8)
     }
 }
 
@@ -37,7 +41,7 @@ struct AppCard<Content: View>: View {
 
                     Text("Cards can hold any content and inherit the project styling.")
                         .font(.subheadline)
-                        .foregroundStyle(Theme.inkSubtle)
+                        .foregroundStyle(ThemePalette(scheme: .light).inkSubtle)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -56,7 +60,7 @@ struct AppCard<Content: View>: View {
 
                     Text("Cards can hold any content and inherit the project styling.")
                         .font(.subheadline)
-                        .foregroundStyle(Theme.inkSubtle)
+                        .foregroundStyle(ThemePalette(scheme: .dark).inkSubtle)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

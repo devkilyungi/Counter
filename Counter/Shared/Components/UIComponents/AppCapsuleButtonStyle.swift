@@ -34,12 +34,12 @@ struct AppCapsuleButtonStyle: ButtonStyle {
         VStack(spacing: 16) {
             Button("Primary") {}
                 .buttonStyle(
-                    AppCapsuleButtonStyle(background: Theme.accent, foreground: .white)
+                    AppCapsuleButtonStyle(background: ThemePalette(scheme: .light).accent, foreground: .white)
                 )
 
             Button("Secondary") {}
                 .buttonStyle(
-                    AppCapsuleButtonStyle(background: Theme.neutralButton, foreground: .white)
+                    AppCapsuleButtonStyle(background: ThemePalette(scheme: .light).neutralButton, foreground: .white)
                 )
         }
         .padding()
@@ -51,12 +51,12 @@ struct AppCapsuleButtonStyle: ButtonStyle {
         VStack(spacing: 16) {
             Button("Primary") {}
                 .buttonStyle(
-                    AppCapsuleButtonStyle(background: Theme.accent)
+                    AppCapsuleButtonStyle(background: ThemePalette(scheme: .dark).accent)
                 )
 
             Button("Secondary") {}
                 .buttonStyle(
-                    AppCapsuleButtonStyle(background: Theme.neutralButton)
+                    AppCapsuleButtonStyle(background: ThemePalette(scheme: .dark).neutralButton)
                 )
         }
         .padding()

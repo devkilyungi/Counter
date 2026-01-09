@@ -8,22 +8,26 @@
 import SwiftUI
 
 struct AppIconCircleButton: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let systemName: String
     let label: String
     let tint: Color
     let action: () -> Void
 
     var body: some View {
+        let palette = ThemePalette(scheme: colorScheme)
+
         Button(action: action) {
             Image(systemName: systemName)
                 .font(.title2.weight(.semibold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(palette.ink)
                 .frame(width: 64, height: 64)
                 .background(tint)
                 .clipShape(Circle())
                 .overlay(
                     Circle()
-                        .stroke(Theme.surfaceAlt, lineWidth: 1)
+                        .stroke(palette.surfaceAlt, lineWidth: 1)
                 )
         }
         .buttonStyle(.plain)
@@ -37,14 +41,14 @@ struct AppIconCircleButton: View {
             AppIconCircleButton(
                 systemName: "minus",
                 label: "Decrement",
-                tint: Theme.accentSoft,
+                tint: ThemePalette(scheme: .light).accentSoft,
                 action: {}
             )
 
             AppIconCircleButton(
                 systemName: "plus",
                 label: "Increment",
-                tint: Theme.accentSoft,
+                tint: ThemePalette(scheme: .light).accentSoft,
                 action: {}
             )
         }
@@ -58,14 +62,14 @@ struct AppIconCircleButton: View {
             AppIconCircleButton(
                 systemName: "minus",
                 label: "Decrement",
-                tint: Theme.accentSoft,
+                tint: ThemePalette(scheme: .dark).accentSoft,
                 action: {}
             )
 
             AppIconCircleButton(
                 systemName: "plus",
                 label: "Increment",
-                tint: Theme.accentSoft,
+                tint: ThemePalette(scheme: .dark).accentSoft,
                 action: {}
             )
         }
