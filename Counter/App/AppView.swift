@@ -116,20 +116,6 @@ struct AppView: View {
                     }
                 }
             }
-            .sheet(
-                item: $store.scope(
-                    state: \.destination?.settings,
-                    action: \.destination.settings
-                )
-            ) { settingsStore in
-                WithPerceptionTracking {
-                    SettingsView(
-                        store: settingsStore,
-                        onOpenSheet: { store.send(.showCounterInSheet) },
-                        onOpenFullScreen: { store.send(.showCounterInFullScreenCover) }
-                    )
-                }
-            }
         }
     }
 }

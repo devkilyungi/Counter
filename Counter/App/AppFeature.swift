@@ -55,13 +55,11 @@ struct AppFeature {
         enum State: Equatable {
             case counterSheet(CounterFeature.State)
             case counterFullScreenCover(CounterFeature.State)
-            case settings(SettingsFeature.State)
         }
 
         enum Action {
             case counterSheet(CounterFeature.Action)
             case counterFullScreenCover(CounterFeature.Action)
-            case settings(SettingsFeature.Action)
         }
 
         var body: some Reducer<State, Action> {
@@ -70,9 +68,6 @@ struct AppFeature {
             }
             Scope(state: \.counterFullScreenCover, action: \.counterFullScreenCover) {
                 CounterFeature()
-            }
-            Scope(state: \.settings, action: \.settings) {
-                SettingsFeature()
             }
         }
     }
@@ -134,7 +129,6 @@ struct AppFeature {
                 return .none
 
             case .showSettings:
-                state.destination = .settings(SettingsFeature.State())
                 return .none
 
             case .settings(.autoIncrementSpeedChanged):
