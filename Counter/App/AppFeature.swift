@@ -95,7 +95,7 @@ struct AppFeature {
 
         Reduce { state, action in
             switch action {
-            case .primaryCounter, .optionalCounter, .firstCounter, .secondCounter, .settings(.dismissTapped), .settings(.appearance):
+            case .primaryCounter, .optionalCounter, .firstCounter, .secondCounter:
                 return .none
 
             case let .tabSelected(tab):
@@ -154,6 +154,9 @@ struct AppFeature {
                 }
 
                 return .merge(effects)
+
+            case .settings:
+                return .none
             }
         }
         .ifLet(\.optionalCounter, action: \.optionalCounter) {
