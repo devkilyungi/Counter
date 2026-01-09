@@ -21,6 +21,20 @@ struct CounterFeature {
         var isFactLoading = false
         var isTimerRunning = false
         var timerToken = UUID()
+
+        init(
+            value: Int = 0,
+            factText: String? = nil,
+            isFactLoading: Bool = false,
+            isTimerRunning: Bool = false,
+            timerToken: UUID = UUID()
+        ) {
+            self.value = value
+            self.factText = factText
+            self.isFactLoading = isFactLoading
+            self.isTimerRunning = isTimerRunning
+            self.timerToken = timerToken
+        }
     }
 
     enum Action {
@@ -38,6 +52,7 @@ struct CounterFeature {
     @Dependency(\.continuousClock) var clock
     @Dependency(\.factClient) var factClient
     @Dependency(\.dismiss) var dismiss
+    @Dependency(\.uuid) var uuid
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -89,7 +104,7 @@ struct CounterFeature {
 
             case .resetTapped:
                 let timerToken = state.timerToken
-                state = State()
+                state = State(timerToken: uuid())
                 return .cancel(id: CancelID.timer(timerToken))
 
             case .timerTicked:

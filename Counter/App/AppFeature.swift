@@ -44,6 +44,8 @@ struct AppFeature {
         case showSettings
     }
 
+    @Dependency(\.uuid) var uuid
+
     @Reducer
     struct Destination {
         @ObservableState
@@ -96,7 +98,7 @@ struct AppFeature {
 
             case .optionalCounterToggleTapped:
                 state.optionalCounter = state.optionalCounter == nil
-                    ? CounterFeature.State()
+                    ? CounterFeature.State(timerToken: uuid())
                     : nil
                 return .none
 
@@ -104,11 +106,11 @@ struct AppFeature {
                 return .none
 
             case .showCounterInSheet:
-                state.destination = .counterSheet(CounterFeature.State())
+                state.destination = .counterSheet(CounterFeature.State(timerToken: uuid()))
                 return .none
 
             case .showCounterInFullScreenCover:
-                state.destination = .counterFullScreenCover(CounterFeature.State())
+                state.destination = .counterFullScreenCover(CounterFeature.State(timerToken: uuid()))
                 return .none
 
             case .showSettings:
