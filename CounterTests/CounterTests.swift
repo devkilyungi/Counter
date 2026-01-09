@@ -17,7 +17,7 @@ struct CounterTests {
             CounterFeature()
         }
 
-        await store.send(.incrementButtonTapped) { $0.count = 1 }
+        await store.send(.incrementTapped) { $0.value = 1 }
     }
 
     @Test func decrementButton_decreasesCount() async {
@@ -25,7 +25,7 @@ struct CounterTests {
             CounterFeature()
         }
 
-        await store.send(.decrementButtonTapped) { $0.count = -1 }
+        await store.send(.decrementTapped) { $0.value = -1 }
     }
 
     @Test func timer_emitsTicks_everySecond() async {
@@ -37,14 +37,14 @@ struct CounterTests {
             $0.continuousClock = clock
         }
 
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = true }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(3))
-        await store.receive(.timerTicked) { $0.count = 1 }
-        await store.receive(.timerTicked) { $0.count = 2 }
-        await store.receive(.timerTicked) { $0.count = 3 }
+        await store.receive(\.timerTicked) { $0.value = 1 }
+        await store.receive(\.timerTicked) { $0.value = 2 }
+        await store.receive(\.timerTicked) { $0.value = 3 }
 
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = false }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = false }
     }
 
     @Test func timer_cancelsOnStop_noFurtherTicks() async {
@@ -56,12 +56,12 @@ struct CounterTests {
             $0.continuousClock = clock
         }
 
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = true }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(1))
-        await store.receive(.timerTicked) { $0.count = 1 }
+        await store.receive(\.timerTicked) { $0.value = 1 }
 
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = false }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = false }
 
         // Advance time; if a tick arrives after cancellation, the test should fail.
         await clock.advance(by: .seconds(2))
@@ -79,18 +79,18 @@ struct CounterTests {
             $0.continuousClock = clock
         }
 
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = true }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(1))
-        await store.receive(.timerTicked) { $0.count = 1 }
+        await store.receive(\.timerTicked) { $0.value = 1 }
 
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = false }
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = true }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = false }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(1))
-        await store.receive(.timerTicked) { $0.count = 2 }
+        await store.receive(\.timerTicked) { $0.value = 2 }
 
-        await store.send(.toggleTimerButtonTapped) { $0.isTimerOn = false }
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = false }
     }
 
     @Test func getFact_success_setsFact_andStopsLoading() async {
@@ -100,14 +100,14 @@ struct CounterTests {
             $0.factClient.fetch = { "A cat has five toes." }
         }
 
-        await store.send(.getFactButtonTapped) {
-            $0.fact = nil
-            $0.isLoadingFact = true
+        await store.send(.factButtonTapped) {
+            $0.factText = nil
+            $0.isFactLoading = true
         }
 
-        await store.receive(.factResponse("A cat has five toes.")) {
-            $0.fact = "A cat has five toes."
-            $0.isLoadingFact = false
+        await store.receive(\.factResponseReceived) {
+            $0.factText = "A cat has five toes."
+            $0.isFactLoading = false
         }
     }
 
@@ -122,14 +122,14 @@ struct CounterTests {
             $0.factClient.fetch = { throw TestError() }
         }
 
-        await store.send(.getFactButtonTapped) {
-            $0.fact = nil
-            $0.isLoadingFact = true
+        await store.send(.factButtonTapped) {
+            $0.factText = nil
+            $0.isFactLoading = true
         }
 
-        await store.receive(.factFailed("Network down")) {
-            $0.fact = "Failed to load fact: Network down"
-            $0.isLoadingFact = false
+        await store.receive(\.factRequestFailed) {
+            $0.factText = "Failed to load fact: Network down"
+            $0.isFactLoading = false
         }
     }
 
@@ -140,22 +140,22 @@ struct CounterTests {
             $0.factClient.fetch = { "Fact" } // same response is fine for behavior testing
         }
 
-        await store.send(.getFactButtonTapped) {
-            $0.fact = nil
-            $0.isLoadingFact = true
+        await store.send(.factButtonTapped) {
+            $0.factText = nil
+            $0.isFactLoading = true
         }
-        await store.receive(.factResponse("Fact")) {
-            $0.fact = "Fact"
-            $0.isLoadingFact = false
+        await store.receive(\.factResponseReceived) {
+            $0.factText = "Fact"
+            $0.isFactLoading = false
         }
 
-        await store.send(.getFactButtonTapped) {
-            $0.fact = nil // cleared immediately
-            $0.isLoadingFact = true
+        await store.send(.factButtonTapped) {
+            $0.factText = nil // cleared immediately
+            $0.isFactLoading = true
         }
-        await store.receive(.factResponse("Fact")) {
-            $0.fact = "Fact"
-            $0.isLoadingFact = false
+        await store.receive(\.factResponseReceived) {
+            $0.factText = "Fact"
+            $0.isFactLoading = false
         }
     }
 }
