@@ -22,22 +22,6 @@ struct CounterFeature {
         var isTimerRunning = false
         var timerToken: UUID
         var timerIntervalSeconds = 1.0
-
-        init(
-            value: Int = 0,
-            factText: String? = nil,
-            isFactLoading: Bool = false,
-            isTimerRunning: Bool = false,
-            timerToken: UUID,
-            timerIntervalSeconds: Double = 1.0
-        ) {
-            self.value = value
-            self.factText = factText
-            self.isFactLoading = isFactLoading
-            self.isTimerRunning = isTimerRunning
-            self.timerToken = timerToken
-            self.timerIntervalSeconds = timerIntervalSeconds
-        }
     }
 
     enum Action {
