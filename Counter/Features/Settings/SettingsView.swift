@@ -39,6 +39,8 @@ struct SettingsView: View {
                                 subtitle: "Customize your counter experience."
                             )
 
+                            AppearanceSection(store: store.scope(state: \.appearance, action: \.appearance))
+
                             if onOpenSheet != nil || onOpenFullScreen != nil {
                                 AppCard {
                                     VStack(spacing: 12) {
@@ -171,6 +173,35 @@ private struct SettingRow<Content: View>: View {
             Spacer()
 
             content
+        }
+    }
+}
+
+private struct AppearanceSection: View {
+    let store: StoreOf<AppearanceFeature>
+
+    var body: some View {
+        WithPerceptionTracking {
+            @Perception.Bindable var store = store
+
+            AppCard {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Appearance")
+                        .font(.headline)
+
+                    Picker(
+                        "Theme",
+                        selection: $store.selection.sending(\.setSelection)
+                    ) {
+                        ForEach(Appearance.allCases) { appearance in
+                            Text(appearance.displayName)
+                                .tag(appearance)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onAppear { store.send(.onAppear) }
+                }
+            }
         }
     }
 }

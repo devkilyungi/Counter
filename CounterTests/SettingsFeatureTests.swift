@@ -85,4 +85,14 @@ struct SettingsFeatureTests {
             $0.autoIncrementSpeed = 3.0
         }
     }
+
+    @Test func appearanceSelection_updatesState() async {
+        let store = TestStore(initialState: SettingsFeature.State()) {
+            SettingsFeature()
+        }
+
+        await store.send(.appearance(.setSelection(.dark))) {
+            $0.appearance.selection = .dark
+        }
+    }
 }

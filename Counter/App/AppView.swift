@@ -45,6 +45,7 @@ struct AppView: View {
             .tint(palette.accent)
             .toolbarBackground(palette.surface, for: .tabBar)
             .toolbarBackground(.visible, for: .tabBar)
+            .preferredColorScheme(store.settings.appearance.selection.colorScheme)
             .sheet(
                 item: $store.scope(
                     state: \.destination?.counterSheet,
@@ -120,9 +121,13 @@ struct AppView: View {
                     state: \.destination?.settings,
                     action: \.destination.settings
                 )
-            ) { store in
+            ) { settingsStore in
                 WithPerceptionTracking {
-                    SettingsView(store: store)
+                    SettingsView(
+                        store: settingsStore,
+                        onOpenSheet: { store.send(.showCounterInSheet) },
+                        onOpenFullScreen: { store.send(.showCounterInFullScreenCover) }
+                    )
                 }
             }
         }
@@ -151,18 +156,6 @@ struct PrimaryCounterTab: View {
                                 store: store.scope(
                                     state: \.primaryCounter,
                                     action: \.primaryCounter
-                                )
-                            )
-
-                            Button {
-                                store.send(.showSettings)
-                            } label: {
-                                Label("Settings", systemImage: "gearshape.fill")
-                            }
-                            .buttonStyle(
-                                AppCapsuleButtonStyle(
-                                    background: palette.accent,
-                                    foreground: .white
                                 )
                             )
                         }
