@@ -25,6 +25,10 @@ struct AppFeatureTests {
             $0.activeTab = .combined
         }
 
+        await store.send(.tabSelected(.settings)) {
+            $0.activeTab = .settings
+        }
+
         await store.send(.tabSelected(.primary)) {
             $0.activeTab = .primary
         }

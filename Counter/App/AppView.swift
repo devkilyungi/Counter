@@ -9,10 +9,14 @@ import ComposableArchitecture
 import SwiftUI
 
 struct AppView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     @Perception.Bindable var store: StoreOf<AppFeature>
 
     var body: some View {
         WithPerceptionTracking {
+            let palette = ThemePalette(scheme: colorScheme)
+
             TabView(selection: $store.activeTab.sending(\.tabSelected)) {
                 PrimaryCounterTab(store: store)
                     .tabItem {
@@ -31,7 +35,16 @@ struct AppView: View {
                         Label("Combined", systemImage: "plus.forwardslash.minus")
                     }
                     .tag(AppFeature.State.Tab.combined)
+
+                SettingsTab(store: store)
+                    .tabItem {
+                        Label("Settings", systemImage: "gearshape.fill")
+                    }
+                    .tag(AppFeature.State.Tab.settings)
             }
+            .tint(palette.accent)
+            .toolbarBackground(palette.surface, for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
             .sheet(
                 item: $store.scope(
                     state: \.destination?.counterSheet,
@@ -141,43 +154,17 @@ struct PrimaryCounterTab: View {
                                 )
                             )
 
-                            VStack(spacing: 12) {
-                                Button {
-                                    store.send(.showCounterInSheet)
-                                } label: {
-                                    Label("Open Counter in Sheet", systemImage: "rectangle.portrait.and.arrow.right")
-                                }
-                                .buttonStyle(
-                                    AppCapsuleButtonStyle(
-                                        background: palette.neutralButton,
-                                        foreground: .white
-                                    )
-                                )
-
-                                Button {
-                                    store.send(.showCounterInFullScreenCover)
-                                } label: {
-                                    Label("Open Counter Full Screen", systemImage: "arrow.up.left.and.arrow.down.right")
-                                }
-                                .buttonStyle(
-                                    AppCapsuleButtonStyle(
-                                        background: palette.neutralButton,
-                                        foreground: .white
-                                    )
-                                )
-
-                                Button {
-                                    store.send(.showSettings)
-                                } label: {
-                                    Label("Settings", systemImage: "gearshape.fill")
-                                }
-                                .buttonStyle(
-                                    AppCapsuleButtonStyle(
-                                        background: palette.accent,
-                                        foreground: .white
-                                    )
-                                )
+                            Button {
+                                store.send(.showSettings)
+                            } label: {
+                                Label("Settings", systemImage: "gearshape.fill")
                             }
+                            .buttonStyle(
+                                AppCapsuleButtonStyle(
+                                    background: palette.accent,
+                                    foreground: .white
+                                )
+                            )
                         }
                         .padding(.horizontal, 20)
                         .padding(.top, 24)
@@ -266,6 +253,7 @@ struct OptionalCounterTab: View {
 
 struct CombinedCountersTab: View {
     @Environment(\.colorScheme) private var colorScheme
+    @State private var selectedCounter = CombinedCounterTab.first
 
     let store: StoreOf<AppFeature>
 
@@ -296,21 +284,34 @@ struct CombinedCountersTab: View {
                                 .frame(maxWidth: .infinity)
                             }
 
-                            CounterSection(
-                                title: "Counter One",
-                                store: store.scope(
-                                    state: \.firstCounter,
-                                    action: \.firstCounter
-                                )
-                            )
+                            Picker("Counter", selection: $selectedCounter) {
+                                ForEach(CombinedCounterTab.allCases, id: \.self) { tab in
+                                    Text(tab.title).tag(tab)
+                                }
+                            }
+                            .pickerStyle(.segmented)
 
-                            CounterSection(
-                                title: "Counter Two",
-                                store: store.scope(
-                                    state: \.secondCounter,
-                                    action: \.secondCounter
+                            TabView(selection: $selectedCounter) {
+                                CombinedCounterPage(
+                                    title: "Counter One",
+                                    store: store.scope(
+                                        state: \.firstCounter,
+                                        action: \.firstCounter
+                                    )
                                 )
-                            )
+                                .tag(CombinedCounterTab.first)
+
+                                CombinedCounterPage(
+                                    title: "Counter Two",
+                                    store: store.scope(
+                                        state: \.secondCounter,
+                                        action: \.secondCounter
+                                    )
+                                )
+                                .tag(CombinedCounterTab.second)
+                            }
+                            .tabViewStyle(.page(indexDisplayMode: .never))
+                            .frame(height: 520)
                         }
                         .padding(.horizontal, 20)
                         .padding(.top, 24)
@@ -324,7 +325,21 @@ struct CombinedCountersTab: View {
     }
 }
 
-private struct CounterSection: View {
+private enum CombinedCounterTab: String, CaseIterable {
+    case first
+    case second
+
+    var title: String {
+        switch self {
+        case .first:
+            return "Counter One"
+        case .second:
+            return "Counter Two"
+        }
+    }
+}
+
+private struct CombinedCounterPage: View {
     @Environment(\.colorScheme) private var colorScheme
 
     let title: String
@@ -341,6 +356,23 @@ private struct CounterSection: View {
             CounterView(store: store)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct SettingsTab: View {
+    let store: StoreOf<AppFeature>
+
+    var body: some View {
+        WithPerceptionTracking {
+            SettingsView(
+                store: store.scope(
+                    state: \.settings,
+                    action: \.settings
+                ),
+                onOpenSheet: { store.send(.showCounterInSheet) },
+                onOpenFullScreen: { store.send(.showCounterInFullScreenCover) }
+            )
+        }
     }
 }
 

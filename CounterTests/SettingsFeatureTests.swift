@@ -26,31 +26,17 @@ struct SettingsFeatureTests {
         }
     }
 
-    @Test func notificationsToggle_updatesState() async {
-        let store = TestStore(initialState: SettingsFeature.State(notificationsEnabled: true)) {
-            SettingsFeature()
-        }
-
-        await store.send(.notificationsToggled(false)) {
-            $0.notificationsEnabled = false
-        }
-
-        await store.send(.notificationsToggled(true)) {
-            $0.notificationsEnabled = true
-        }
-    }
-
     @Test func autoIncrementSpeed_updatesState() async {
         let store = TestStore(initialState: SettingsFeature.State()) {
             SettingsFeature()
         }
 
-        await store.send(.autoIncrementSpeedChanged(2.5)) {
-            $0.autoIncrementSpeed = 2.5
+        await store.send(.autoIncrementSpeedChanged(2.0)) {
+            $0.autoIncrementSpeed = 2.0
         }
 
-        await store.send(.autoIncrementSpeedChanged(0.5)) {
-            $0.autoIncrementSpeed = 0.5
+        await store.send(.autoIncrementSpeedChanged(1.0)) {
+            $0.autoIncrementSpeed = 1.0
         }
     }
 
@@ -65,8 +51,8 @@ struct SettingsFeatureTests {
         }
 
         // Test minimum boundary
-        await store.send(.autoIncrementSpeedChanged(0.5)) {
-            $0.autoIncrementSpeed = 0.5
+        await store.send(.autoIncrementSpeedChanged(1.0)) {
+            $0.autoIncrementSpeed = 1.0
         }
     }
 
@@ -93,10 +79,6 @@ struct SettingsFeatureTests {
 
         await store.send(.darkModeToggled(true)) {
             $0.isDarkModeEnabled = true
-        }
-
-        await store.send(.notificationsToggled(false)) {
-            $0.notificationsEnabled = false
         }
 
         await store.send(.autoIncrementSpeedChanged(3.0)) {

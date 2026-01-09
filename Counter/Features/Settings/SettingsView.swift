@@ -12,6 +12,18 @@ struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     let store: StoreOf<SettingsFeature>
+    let onOpenSheet: (() -> Void)?
+    let onOpenFullScreen: (() -> Void)?
+
+    init(
+        store: StoreOf<SettingsFeature>,
+        onOpenSheet: (() -> Void)? = nil,
+        onOpenFullScreen: (() -> Void)? = nil
+    ) {
+        self.store = store
+        self.onOpenSheet = onOpenSheet
+        self.onOpenFullScreen = onOpenFullScreen
+    }
 
     var body: some View {
         WithPerceptionTracking {
@@ -27,6 +39,42 @@ struct SettingsView: View {
                                 subtitle: "Customize your counter experience."
                             )
 
+                            if onOpenSheet != nil || onOpenFullScreen != nil {
+                                AppCard {
+                                    VStack(spacing: 12) {
+                                        if let onOpenSheet {
+                                            Button(action: onOpenSheet) {
+                                                Label(
+                                                    "Open Counter in Sheet",
+                                                    systemImage: "rectangle.portrait.and.arrow.right"
+                                                )
+                                            }
+                                            .buttonStyle(
+                                                AppCapsuleButtonStyle(
+                                                    background: palette.neutralButton,
+                                                    foreground: .white
+                                                )
+                                            )
+                                        }
+
+                                        if let onOpenFullScreen {
+                                            Button(action: onOpenFullScreen) {
+                                                Label(
+                                                    "Open Counter Full Screen",
+                                                    systemImage: "arrow.up.left.and.arrow.down.right"
+                                                )
+                                            }
+                                            .buttonStyle(
+                                                AppCapsuleButtonStyle(
+                                                    background: palette.neutralButton,
+                                                    foreground: .white
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
                             AppCard {
                                 VStack(spacing: 20) {
                                     SettingRow(
@@ -36,17 +84,6 @@ struct SettingsView: View {
                                         palette: palette
                                     ) {
                                         Toggle("", isOn: $store.isDarkModeEnabled.sending(\.darkModeToggled))
-                                    }
-
-                                    Divider()
-
-                                    SettingRow(
-                                        icon: "bell.fill",
-                                        title: "Notifications",
-                                        subtitle: "Enable counter alerts",
-                                        palette: palette
-                                    ) {
-                                        Toggle("", isOn: $store.notificationsEnabled.sending(\.notificationsToggled))
                                     }
 
                                     Divider()
@@ -67,32 +104,20 @@ struct SettingsView: View {
 
                                             Spacer()
 
-                                            Text("\(store.autoIncrementSpeed, specifier: "%.1f")s")
+                                            Text("\(store.autoIncrementSpeed, specifier: "%.0f")s")
                                                 .font(.headline.monospacedDigit())
                                                 .foregroundStyle(palette.accent)
                                         }
 
                                         Slider(
                                             value: $store.autoIncrementSpeed.sending(\.autoIncrementSpeedChanged),
-                                            in: 0.5...5.0,
-                                            step: 0.5
+                                            in: 1.0...5.0,
+                                            step: 1.0
                                         )
                                         .tint(palette.accent)
                                     }
                                 }
                             }
-
-                            Button {
-                                store.send(.dismissTapped)
-                            } label: {
-                                Label("Done", systemImage: "checkmark.circle.fill")
-                            }
-                            .buttonStyle(
-                                AppCapsuleButtonStyle(
-                                    background: palette.accent,
-                                    foreground: .white
-                                )
-                            )
                         }
                         .padding(.horizontal, 20)
                         .padding(.top, 24)

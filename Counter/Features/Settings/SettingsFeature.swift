@@ -13,18 +13,13 @@ struct SettingsFeature {
     @ObservableState
     struct State: Equatable {
         var isDarkModeEnabled = false
-        var notificationsEnabled = true
         var autoIncrementSpeed = 1.0
     }
 
     enum Action {
         case darkModeToggled(Bool)
-        case notificationsToggled(Bool)
         case autoIncrementSpeedChanged(Double)
-        case dismissTapped
     }
-
-    @Dependency(\.dismiss) var dismiss
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -33,18 +28,9 @@ struct SettingsFeature {
                 state.isDarkModeEnabled = isEnabled
                 return .none
 
-            case let .notificationsToggled(isEnabled):
-                state.notificationsEnabled = isEnabled
-                return .none
-
             case let .autoIncrementSpeedChanged(speed):
                 state.autoIncrementSpeed = speed
                 return .none
-
-            case .dismissTapped:
-                return .run { _ in
-                    await self.dismiss()
-                }
             }
         }
     }

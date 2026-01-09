@@ -16,6 +16,7 @@ struct AppFeature {
         var optionalCounter: CounterFeature.State?
         var firstCounter = CounterFeature.State()
         var secondCounter = CounterFeature.State()
+        var settings = SettingsFeature.State()
         var activeTab = Tab.primary
 
         @Presents var destination: Destination.State?
@@ -24,6 +25,7 @@ struct AppFeature {
             case primary
             case optional
             case combined
+            case settings
         }
 
         var combinedTotal: Int {
@@ -36,6 +38,7 @@ struct AppFeature {
         case optionalCounter(CounterFeature.Action)
         case firstCounter(CounterFeature.Action)
         case secondCounter(CounterFeature.Action)
+        case settings(SettingsFeature.Action)
         case tabSelected(State.Tab)
         case optionalCounterToggleTapped
         case destination(PresentationAction<Destination.Action>)
@@ -87,9 +90,13 @@ struct AppFeature {
             CounterFeature()
         }
 
+        Scope(state: \.settings, action: \.settings) {
+            SettingsFeature()
+        }
+
         Reduce { state, action in
             switch action {
-            case .primaryCounter, .optionalCounter, .firstCounter, .secondCounter:
+            case .primaryCounter, .optionalCounter, .firstCounter, .secondCounter, .settings:
                 return .none
 
             case let .tabSelected(tab):
