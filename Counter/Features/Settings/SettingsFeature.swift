@@ -12,13 +12,11 @@ import Foundation
 struct SettingsFeature {
     @ObservableState
     struct State: Equatable {
-        var isDarkModeEnabled = false
         var autoIncrementSpeed = 1.0
         var appearance = AppearanceFeature.State()
     }
 
     enum Action {
-        case darkModeToggled(Bool)
         case autoIncrementSpeedChanged(Double)
         case dismissTapped
         case appearance(AppearanceFeature.Action)
@@ -29,10 +27,6 @@ struct SettingsFeature {
     var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case let .darkModeToggled(isEnabled):
-                state.isDarkModeEnabled = isEnabled
-                return .none
-
             case let .autoIncrementSpeedChanged(speed):
                 state.autoIncrementSpeed = speed
                 return .none

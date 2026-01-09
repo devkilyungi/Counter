@@ -135,15 +135,11 @@ struct AppView: View {
 }
 
 struct PrimaryCounterTab: View {
-    @Environment(\.colorScheme) private var colorScheme
-
     let store: StoreOf<AppFeature>
 
     var body: some View {
         WithPerceptionTracking {
             NavigationStack {
-                let palette = ThemePalette(scheme: colorScheme)
-
                 ScreenBackground {
                     ScrollView {
                         VStack(spacing: 24) {

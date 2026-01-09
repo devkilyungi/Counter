@@ -96,7 +96,7 @@ struct AppFeature {
 
         Reduce { state, action in
             switch action {
-            case .primaryCounter, .optionalCounter, .firstCounter, .secondCounter, .settings:
+            case .primaryCounter, .optionalCounter, .firstCounter, .secondCounter, .settings(.dismissTapped), .settings(.appearance):
                 return .none
 
             case let .tabSelected(tab):
@@ -113,15 +113,42 @@ struct AppFeature {
                 return .none
 
             case .showCounterInSheet:
-                state.destination = .counterSheet(CounterFeature.State(timerToken: uuid()))
+                state.destination = .counterSheet(
+                    CounterFeature.State(
+                        timerToken: uuid(),
+                        timerIntervalSeconds: state.settings.autoIncrementSpeed
+                    )
+                )
                 return .none
 
             case .showCounterInFullScreenCover:
-                state.destination = .counterFullScreenCover(CounterFeature.State(timerToken: uuid()))
+                state.destination = .counterFullScreenCover(
+                    CounterFeature.State(
+                        timerToken: uuid(),
+                        timerIntervalSeconds: state.settings.autoIncrementSpeed
+                    )
+                )
                 return .none
 
             case .showSettings:
                 state.destination = .settings(SettingsFeature.State())
+                return .none
+
+            case .settings(.autoIncrementSpeedChanged):
+                let speed = state.settings.autoIncrementSpeed
+                state.primaryCounter.timerIntervalSeconds = speed
+                state.firstCounter.timerIntervalSeconds = speed
+                state.secondCounter.timerIntervalSeconds = speed
+                state.optionalCounter?.timerIntervalSeconds = speed
+
+                if case .counterSheet(var counterState) = state.destination {
+                    counterState.timerIntervalSeconds = speed
+                    state.destination = .counterSheet(counterState)
+                } else if case .counterFullScreenCover(var counterState) = state.destination {
+                    counterState.timerIntervalSeconds = speed
+                    state.destination = .counterFullScreenCover(counterState)
+                }
+
                 return .none
             }
         }

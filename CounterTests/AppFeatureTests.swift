@@ -44,7 +44,12 @@ struct AppFeatureTests {
         }
 
         await store.send(.showCounterInSheet) {
-            $0.destination = .counterSheet(CounterFeature.State(timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
     }
 
@@ -58,7 +63,12 @@ struct AppFeatureTests {
         }
 
         await store.send(.showCounterInFullScreenCover) {
-            $0.destination = .counterFullScreenCover(CounterFeature.State(timerToken: token))
+            $0.destination = .counterFullScreenCover(
+                CounterFeature.State(
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
     }
 
@@ -83,12 +93,22 @@ struct AppFeatureTests {
 
         // Open sheet
         await store.send(.showCounterInSheet) {
-            $0.destination = .counterSheet(CounterFeature.State(timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
 
         // Switch to full screen
         await store.send(.showCounterInFullScreenCover) {
-            $0.destination = .counterFullScreenCover(CounterFeature.State(timerToken: token))
+            $0.destination = .counterFullScreenCover(
+                CounterFeature.State(
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
 
         // Switch to settings
@@ -190,15 +210,32 @@ struct AppFeatureTests {
         }
 
         await store.send(.showCounterInSheet) {
-            $0.destination = .counterSheet(CounterFeature.State(timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
 
         await store.send(.destination(.presented(.counterSheet(.incrementTapped)))) {
-            $0.destination = .counterSheet(CounterFeature.State(value: 1, timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    value: 1,
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
 
         await store.send(.destination(.presented(.counterSheet(.decrementTapped)))) {
-            $0.destination = .counterSheet(CounterFeature.State(value: 0, timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    value: 0,
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
     }
 
@@ -207,7 +244,12 @@ struct AppFeatureTests {
 
         let store = TestStore(
             initialState: AppFeature.State(
-                destination: .counterSheet(CounterFeature.State(timerToken: token))
+                destination: .counterSheet(
+                    CounterFeature.State(
+                        timerToken: token,
+                        timerIntervalSeconds: 1.0
+                    )
+                )
             )
         ) {
             AppFeature()
@@ -234,16 +276,34 @@ struct AppFeatureTests {
         }
 
         await store.send(.showCounterInSheet) {
-            $0.destination = .counterSheet(CounterFeature.State(timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
 
         await store.send(.destination(.presented(.counterSheet(.timerButtonTapped)))) {
-            $0.destination = .counterSheet(CounterFeature.State(isTimerRunning: true, timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    isTimerRunning: true,
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
 
         await clock.advance(by: .seconds(1))
         await store.receive(\.destination.presented.counterSheet.timerTicked) {
-            $0.destination = .counterSheet(CounterFeature.State(value: 1, isTimerRunning: true, timerToken: token))
+            $0.destination = .counterSheet(
+                CounterFeature.State(
+                    value: 1,
+                    isTimerRunning: true,
+                    timerToken: token,
+                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                )
+            )
         }
 
         // Dismiss the destination
@@ -267,7 +327,10 @@ struct AppFeatureTests {
         }
 
         await store.send(.optionalCounterToggleTapped) {
-            $0.optionalCounter = CounterFeature.State(timerToken: token)
+            $0.optionalCounter = CounterFeature.State(
+                timerToken: token,
+                timerIntervalSeconds: $0.settings.autoIncrementSpeed
+            )
         }
 
         await store.send(.primaryCounter(.incrementTapped)) {

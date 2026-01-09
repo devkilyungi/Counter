@@ -12,20 +12,6 @@ import Testing
 
 @MainActor
 struct SettingsFeatureTests {
-    @Test func darkModeToggle_updatesState() async {
-        let store = TestStore(initialState: SettingsFeature.State()) {
-            SettingsFeature()
-        }
-
-        await store.send(.darkModeToggled(true)) {
-            $0.isDarkModeEnabled = true
-        }
-
-        await store.send(.darkModeToggled(false)) {
-            $0.isDarkModeEnabled = false
-        }
-    }
-
     @Test func autoIncrementSpeed_updatesState() async {
         let store = TestStore(initialState: SettingsFeature.State()) {
             SettingsFeature()
@@ -46,8 +32,8 @@ struct SettingsFeatureTests {
         }
 
         // Test maximum boundary
-        await store.send(.autoIncrementSpeedChanged(5.0)) {
-            $0.autoIncrementSpeed = 5.0
+        await store.send(.autoIncrementSpeedChanged(15.0)) {
+            $0.autoIncrementSpeed = 15.0
         }
 
         // Test minimum boundary
@@ -77,10 +63,6 @@ struct SettingsFeatureTests {
             SettingsFeature()
         }
 
-        await store.send(.darkModeToggled(true)) {
-            $0.isDarkModeEnabled = true
-        }
-
         await store.send(.autoIncrementSpeedChanged(3.0)) {
             $0.autoIncrementSpeed = 3.0
         }
@@ -89,6 +71,9 @@ struct SettingsFeatureTests {
     @Test func appearanceSelection_updatesState() async {
         let store = TestStore(initialState: SettingsFeature.State()) {
             SettingsFeature()
+        } withDependencies: {
+            $0.theme.appearance = { .system }
+            $0.theme.setAppearance = { _ in }
         }
 
         await store.send(.appearance(.setSelection(.dark))) {

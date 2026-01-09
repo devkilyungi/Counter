@@ -79,17 +79,6 @@ struct SettingsView: View {
 
                             AppCard {
                                 VStack(spacing: 20) {
-                                    SettingRow(
-                                        icon: "moon.fill",
-                                        title: "Dark Mode",
-                                        subtitle: "Toggle dark appearance",
-                                        palette: palette
-                                    ) {
-                                        Toggle("", isOn: $store.isDarkModeEnabled.sending(\.darkModeToggled))
-                                    }
-
-                                    Divider()
-
                                     VStack(alignment: .leading, spacing: 12) {
                                         HStack {
                                             Image(systemName: "speedometer")
@@ -111,12 +100,15 @@ struct SettingsView: View {
                                                 .foregroundStyle(palette.accent)
                                         }
 
-                                        Slider(
+                                        Stepper(
                                             value: $store.autoIncrementSpeed.sending(\.autoIncrementSpeedChanged),
-                                            in: 1.0...5.0,
+                                            in: 1.0...15.0,
                                             step: 1.0
-                                        )
-                                        .tint(palette.accent)
+                                        ) {
+                                            Text("Interval")
+                                                .font(.subheadline)
+                                                .foregroundStyle(palette.inkSubtle)
+                                        }
                                     }
                                 }
                             }

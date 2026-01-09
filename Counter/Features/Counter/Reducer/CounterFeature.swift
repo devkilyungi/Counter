@@ -21,19 +21,22 @@ struct CounterFeature {
         var isFactLoading = false
         var isTimerRunning = false
         var timerToken = UUID()
+        var timerIntervalSeconds = 1.0
 
         init(
             value: Int = 0,
             factText: String? = nil,
             isFactLoading: Bool = false,
             isTimerRunning: Bool = false,
-            timerToken: UUID = UUID()
+            timerToken: UUID = UUID(),
+            timerIntervalSeconds: Double = 1.0
         ) {
             self.value = value
             self.factText = factText
             self.isFactLoading = isFactLoading
             self.isTimerRunning = isTimerRunning
             self.timerToken = timerToken
+            self.timerIntervalSeconds = timerIntervalSeconds
         }
     }
 
@@ -82,8 +85,9 @@ struct CounterFeature {
                 state.isTimerRunning.toggle()
 
                 if state.isTimerRunning {
+                    let intervalSeconds = state.timerIntervalSeconds
                     return .run { send in
-                        for await _ in await self.clock.timer(interval: .seconds(1)) {
+                        for await _ in await self.clock.timer(interval: .seconds(intervalSeconds)) {
                             await send(.timerTicked)
                         }
                     }
@@ -104,7 +108,10 @@ struct CounterFeature {
 
             case .resetTapped:
                 let timerToken = state.timerToken
-                state = State(timerToken: uuid())
+                state = State(
+                    timerToken: uuid(),
+                    timerIntervalSeconds: state.timerIntervalSeconds
+                )
                 return .cancel(id: CancelID.timer(timerToken))
 
             case .timerTicked:
