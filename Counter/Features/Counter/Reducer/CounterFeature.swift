@@ -32,10 +32,12 @@ struct CounterFeature {
         case factRequestFailed(String)
         case resetTapped
         case timerTicked
+        case dismissTapped
     }
 
     @Dependency(\.continuousClock) var clock
     @Dependency(\.factClient) var factClient
+    @Dependency(\.dismiss) var dismiss
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -93,6 +95,11 @@ struct CounterFeature {
             case .timerTicked:
                 state.value += 1
                 return .none
+
+            case .dismissTapped:
+                return .run { _ in
+                    await self.dismiss()
+                }
             }
         }
     }

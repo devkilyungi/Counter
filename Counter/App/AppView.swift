@@ -32,16 +32,100 @@ struct AppView: View {
                     }
                     .tag(AppFeature.State.Tab.combined)
             }
+            .sheet(
+                item: $store.scope(
+                    state: \.destination?.counterSheet,
+                    action: \.destination.counterSheet
+                )
+            ) { store in
+                WithPerceptionTracking {
+                    NavigationStack {
+                        ScreenBackground {
+                            ScrollView {
+                                VStack(spacing: 24) {
+                                    ScreenHeader(
+                                        title: "Sheet Counter",
+                                        subtitle: "This counter is presented in a sheet."
+                                    )
+
+                                    CounterView(store: store)
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.top, 24)
+                                .padding(.bottom, 32)
+                            }
+                        }
+                        .navigationTitle("Sheet")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Done") {
+                                    store.send(.dismissTapped)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .fullScreenCover(
+                item: $store.scope(
+                    state: \.destination?.counterFullScreenCover,
+                    action: \.destination.counterFullScreenCover
+                )
+            ) { store in
+                WithPerceptionTracking {
+                    NavigationStack {
+                        ScreenBackground {
+                            ScrollView {
+                                VStack(spacing: 24) {
+                                    ScreenHeader(
+                                        title: "Full Screen Counter",
+                                        subtitle: "This counter takes over the entire screen."
+                                    )
+
+                                    CounterView(store: store)
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.top, 24)
+                                .padding(.bottom, 32)
+                            }
+                        }
+                        .navigationTitle("Full Screen")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Done") {
+                                    store.send(.dismissTapped)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .sheet(
+                item: $store.scope(
+                    state: \.destination?.settings,
+                    action: \.destination.settings
+                )
+            ) { store in
+                WithPerceptionTracking {
+                    SettingsView(store: store)
+                }
+            }
         }
     }
 }
 
 struct PrimaryCounterTab: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let store: StoreOf<AppFeature>
 
     var body: some View {
         WithPerceptionTracking {
             NavigationStack {
+                let palette = ThemePalette(scheme: colorScheme)
+
                 ScreenBackground {
                     ScrollView {
                         VStack(spacing: 24) {
@@ -56,6 +140,44 @@ struct PrimaryCounterTab: View {
                                     action: \.primaryCounter
                                 )
                             )
+
+                            VStack(spacing: 12) {
+                                Button {
+                                    store.send(.showCounterInSheet)
+                                } label: {
+                                    Label("Open Counter in Sheet", systemImage: "rectangle.portrait.and.arrow.right")
+                                }
+                                .buttonStyle(
+                                    AppCapsuleButtonStyle(
+                                        background: palette.neutralButton,
+                                        foreground: .white
+                                    )
+                                )
+
+                                Button {
+                                    store.send(.showCounterInFullScreenCover)
+                                } label: {
+                                    Label("Open Counter Full Screen", systemImage: "arrow.up.left.and.arrow.down.right")
+                                }
+                                .buttonStyle(
+                                    AppCapsuleButtonStyle(
+                                        background: palette.neutralButton,
+                                        foreground: .white
+                                    )
+                                )
+
+                                Button {
+                                    store.send(.showSettings)
+                                } label: {
+                                    Label("Settings", systemImage: "gearshape.fill")
+                                }
+                                .buttonStyle(
+                                    AppCapsuleButtonStyle(
+                                        background: palette.accent,
+                                        foreground: .white
+                                    )
+                                )
+                            }
                         }
                         .padding(.horizontal, 20)
                         .padding(.top, 24)

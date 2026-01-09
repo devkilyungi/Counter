@@ -18,6 +18,8 @@ struct AppFeature {
         var secondCounter = CounterFeature.State()
         var activeTab = Tab.primary
 
+        @Presents var destination: Destination.State?
+
         enum Tab: Hashable {
             case primary
             case optional
@@ -36,6 +38,38 @@ struct AppFeature {
         case secondCounter(CounterFeature.Action)
         case tabSelected(State.Tab)
         case optionalCounterToggleTapped
+        case destination(PresentationAction<Destination.Action>)
+        case showCounterInSheet
+        case showCounterInFullScreenCover
+        case showSettings
+    }
+
+    @Reducer
+    struct Destination {
+        @ObservableState
+        enum State: Equatable {
+            case counterSheet(CounterFeature.State)
+            case counterFullScreenCover(CounterFeature.State)
+            case settings(SettingsFeature.State)
+        }
+
+        enum Action {
+            case counterSheet(CounterFeature.Action)
+            case counterFullScreenCover(CounterFeature.Action)
+            case settings(SettingsFeature.Action)
+        }
+
+        var body: some Reducer<State, Action> {
+            Scope(state: \.counterSheet, action: \.counterSheet) {
+                CounterFeature()
+            }
+            Scope(state: \.counterFullScreenCover, action: \.counterFullScreenCover) {
+                CounterFeature()
+            }
+            Scope(state: \.settings, action: \.settings) {
+                SettingsFeature()
+            }
+        }
     }
 
     var body: some Reducer<State, Action> {
@@ -65,10 +99,28 @@ struct AppFeature {
                     ? CounterFeature.State()
                     : nil
                 return .none
+
+            case .destination:
+                return .none
+
+            case .showCounterInSheet:
+                state.destination = .counterSheet(CounterFeature.State())
+                return .none
+
+            case .showCounterInFullScreenCover:
+                state.destination = .counterFullScreenCover(CounterFeature.State())
+                return .none
+
+            case .showSettings:
+                state.destination = .settings(SettingsFeature.State())
+                return .none
             }
         }
         .ifLet(\.optionalCounter, action: \.optionalCounter) {
             CounterFeature()
+        }
+        .ifLet(\.$destination, action: \.destination) {
+            Destination()
         }
     }
 }
