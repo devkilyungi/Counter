@@ -13,16 +13,11 @@ struct SettingsFeature {
     @ObservableState
     struct State: Equatable {
         var autoIncrementSpeed = 1.0
-        var appearance = AppearanceFeature.State()
     }
 
     enum Action {
         case autoIncrementSpeedChanged(Double)
-        case dismissTapped
-        case appearance(AppearanceFeature.Action)
     }
-
-    @Dependency(\.dismiss) var dismiss
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -30,18 +25,7 @@ struct SettingsFeature {
             case let .autoIncrementSpeedChanged(speed):
                 state.autoIncrementSpeed = speed
                 return .none
-
-            case .dismissTapped:
-                return .run { _ in
-                    await self.dismiss()
-                }
-
-            case .appearance:
-                return .none
             }
-        }
-        Scope(state: \.appearance, action: \.appearance) {
-            AppearanceFeature()
         }
     }
 }

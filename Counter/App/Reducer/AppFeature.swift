@@ -17,6 +17,7 @@ struct AppFeature {
         var firstCounter = CounterFeature.State(timerToken: UUID())
         var secondCounter = CounterFeature.State(timerToken: UUID())
         var settings = SettingsFeature.State()
+        var appearance = AppearanceFeature.State()
         var activeTab = Tab.primary
 
         @Presents var destination: Destination.State?
@@ -43,12 +44,14 @@ struct AppFeature {
         case firstCounter(CounterFeature.Action)
         case secondCounter(CounterFeature.Action)
         case settings(SettingsFeature.Action)
+        case appearance(AppearanceFeature.Action)
         case tabSelected(State.Tab)
         case optionalCounterToggleTapped
         case destination(PresentationAction<Destination.Action>)
         case showCounterInSheet
         case showCounterInFullScreenCover
         case showSettings
+        case onAppear
     }
 
     @Dependency(\.uuid) var uuidGenerator
@@ -93,6 +96,10 @@ struct AppFeature {
             SettingsFeature()
         }
 
+        Scope(state: \.appearance, action: \.appearance) {
+            AppearanceFeature()
+        }
+
         Reduce { state, action in
             switch action {
             case .primaryCounter,
@@ -100,7 +107,8 @@ struct AppFeature {
                  .firstCounter,
                  .secondCounter,
                  .destination,
-                 .showSettings:
+                 .showSettings,
+                 .appearance:
                 return .none
 
             case let .tabSelected(tab):
@@ -133,6 +141,9 @@ struct AppFeature {
                     )
                 )
                 return .none
+
+            case .onAppear:
+                return .send(.appearance(.onAppear))
 
             case .settings(.autoIncrementSpeedChanged):
                 let speed = state.settings.autoIncrementSpeed

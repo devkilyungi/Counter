@@ -42,22 +42,6 @@ struct SettingsFeatureTests {
         }
     }
 
-    @Test func dismissTapped_invokesDismissDependency() async {
-        var dismissCount = 0
-
-        let store = TestStore(initialState: SettingsFeature.State()) {
-            SettingsFeature()
-        } withDependencies: {
-            $0.dismiss = DismissEffect {
-                dismissCount += 1
-            }
-        }
-
-        await store.send(.dismissTapped)
-
-        #expect(dismissCount == 1)
-    }
-
     @Test func multipleSettings_canBeChanged() async {
         let store = TestStore(initialState: SettingsFeature.State()) {
             SettingsFeature()
@@ -65,19 +49,6 @@ struct SettingsFeatureTests {
 
         await store.send(.autoIncrementSpeedChanged(3.0)) {
             $0.autoIncrementSpeed = 3.0
-        }
-    }
-
-    @Test func appearanceSelection_updatesState() async {
-        let store = TestStore(initialState: SettingsFeature.State()) {
-            SettingsFeature()
-        } withDependencies: {
-            $0.theme.appearance = { .system }
-            $0.theme.setAppearance = { _ in }
-        }
-
-        await store.send(.appearance(.setSelection(.dark))) {
-            $0.appearance.selection = .dark
         }
     }
 }

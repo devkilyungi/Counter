@@ -12,15 +12,18 @@ struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     let store: StoreOf<SettingsFeature>
+    let appearanceStore: StoreOf<AppearanceFeature>
     let onOpenSheet: (() -> Void)?
     let onOpenFullScreen: (() -> Void)?
 
     init(
         store: StoreOf<SettingsFeature>,
+        appearanceStore: StoreOf<AppearanceFeature>,
         onOpenSheet: (() -> Void)? = nil,
         onOpenFullScreen: (() -> Void)? = nil
     ) {
         self.store = store
+        self.appearanceStore = appearanceStore
         self.onOpenSheet = onOpenSheet
         self.onOpenFullScreen = onOpenFullScreen
     }
@@ -39,7 +42,7 @@ struct SettingsView: View {
                                 subtitle: "Customize your counter experience."
                             )
 
-                            AppearanceSection(store: store.scope(state: \.appearance, action: \.appearance))
+                            AppearanceSection(store: appearanceStore)
 
                             if onOpenSheet != nil || onOpenFullScreen != nil {
                                 AppCard {
@@ -202,6 +205,9 @@ private struct AppearanceSection: View {
     SettingsView(
         store: Store(initialState: SettingsFeature.State()) {
             SettingsFeature()
+        },
+        appearanceStore: Store(initialState: AppearanceFeature.State()) {
+            AppearanceFeature()
         }
     )
 }
