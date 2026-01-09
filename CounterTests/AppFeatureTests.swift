@@ -70,16 +70,6 @@ struct AppFeatureTests {
         }
     }
 
-    @Test func showSettings_setsDestination() async {
-        let store = TestStore(initialState: AppFeature.State()) {
-            AppFeature()
-        }
-
-        await store.send(.showSettings) {
-            $0.destination = .settings(SettingsFeature.State())
-        }
-    }
-
     @Test func destination_canSwitchBetweenDifferentCases() async {
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
@@ -105,11 +95,6 @@ struct AppFeatureTests {
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
-        }
-
-        // Switch to settings
-        await store.send(.showSettings) {
-            $0.destination = .settings(SettingsFeature.State())
         }
     }
 

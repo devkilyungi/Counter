@@ -31,6 +31,10 @@ struct AppFeature {
         var combinedTotal: Int {
             firstCounter.value + secondCounter.value
         }
+
+        var timerInterval: TimeInterval {
+            1.0 / max(settings.autoIncrementSpeed, 0.1)
+        }
     }
 
     enum Action {
@@ -102,7 +106,7 @@ struct AppFeature {
                 state.optionalCounter = state.optionalCounter == nil
                     ? CounterFeature.State(
                         timerToken: uuidGenerator(),
-                        timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
+                        timerIntervalSeconds: state.timerInterval
                     )
                     : nil
                 return .none
@@ -114,7 +118,7 @@ struct AppFeature {
                 state.destination = .counterSheet(
                     CounterFeature.State(
                         timerToken: uuidGenerator(),
-                        timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
+                        timerIntervalSeconds: state.timerInterval
                     )
                 )
                 return .none
@@ -123,7 +127,7 @@ struct AppFeature {
                 state.destination = .counterFullScreenCover(
                     CounterFeature.State(
                         timerToken: uuidGenerator(),
-                        timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
+                        timerIntervalSeconds: state.timerInterval
                     )
                 )
                 return .none
