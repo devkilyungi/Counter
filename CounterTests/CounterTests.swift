@@ -37,6 +37,7 @@ struct CounterTests {
             $0.continuousClock = clock
         }
 
+        await store.send(.timerSpeedChanged(1.0))
         await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(3))
@@ -56,6 +57,7 @@ struct CounterTests {
             $0.continuousClock = clock
         }
 
+        await store.send(.timerSpeedChanged(1.0))
         await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(1))
@@ -79,6 +81,7 @@ struct CounterTests {
             $0.continuousClock = clock
         }
 
+        await store.send(.timerSpeedChanged(1.0))
         await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(1))
@@ -89,6 +92,32 @@ struct CounterTests {
 
         await clock.advance(by: .seconds(1))
         await store.receive(\.timerTicked) { $0.value = 2 }
+
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = false }
+    }
+
+    @Test func timerSpeedChange_updatesRunningTimerInterval() async {
+        let clock = TestClock()
+
+        let store = TestStore(initialState: CounterFeature.State()) {
+            CounterFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+        }
+
+        await store.send(.timerSpeedChanged(1.0))
+        await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
+
+        await clock.advance(by: .seconds(1))
+        await store.receive(\.timerTicked) { $0.value = 1 }
+
+        await store.send(.timerSpeedChanged(2.0)) {
+            $0.timerIntervalSeconds = 0.5
+        }
+
+        await clock.advance(by: .seconds(1))
+        await store.receive(\.timerTicked) { $0.value = 2 }
+        await store.receive(\.timerTicked) { $0.value = 3 }
 
         await store.send(.timerButtonTapped) { $0.isTimerRunning = false }
     }
@@ -171,6 +200,9 @@ struct CounterTests {
         }
         store.exhaustivity = .off
 
+        await store.send(.timerSpeedChanged(1.0)) {
+            $0.timerIntervalSeconds = 1.0
+        }
         await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
 
         await clock.advance(by: .seconds(1))
@@ -225,6 +257,7 @@ struct CounterTests {
         await store.send(.incrementTapped) { $0.value = 2 }
 
         // Start timer
+        await store.send(.timerSpeedChanged(1.0))
         await store.send(.timerButtonTapped) { $0.isTimerRunning = true }
         await clock.advance(by: .seconds(1))
         await store.receive(\.timerTicked) { $0.value = 3 }

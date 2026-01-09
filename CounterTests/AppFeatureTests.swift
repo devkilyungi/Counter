@@ -47,7 +47,7 @@ struct AppFeatureTests {
             $0.destination = .counterSheet(
                 CounterFeature.State(
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -66,7 +66,7 @@ struct AppFeatureTests {
             $0.destination = .counterFullScreenCover(
                 CounterFeature.State(
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -96,7 +96,7 @@ struct AppFeatureTests {
             $0.destination = .counterSheet(
                 CounterFeature.State(
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -106,7 +106,7 @@ struct AppFeatureTests {
             $0.destination = .counterFullScreenCover(
                 CounterFeature.State(
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -213,7 +213,7 @@ struct AppFeatureTests {
             $0.destination = .counterSheet(
                 CounterFeature.State(
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -223,7 +223,7 @@ struct AppFeatureTests {
                 CounterFeature.State(
                     value: 1,
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -233,7 +233,7 @@ struct AppFeatureTests {
                 CounterFeature.State(
                     value: 0,
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -279,7 +279,7 @@ struct AppFeatureTests {
             $0.destination = .counterSheet(
                 CounterFeature.State(
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -289,7 +289,7 @@ struct AppFeatureTests {
                 CounterFeature.State(
                     isTimerRunning: true,
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -301,7 +301,7 @@ struct AppFeatureTests {
                     value: 1,
                     isTimerRunning: true,
                     timerToken: token,
-                    timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                    timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
         }
@@ -329,7 +329,7 @@ struct AppFeatureTests {
         await store.send(.optionalCounterToggleTapped) {
             $0.optionalCounter = CounterFeature.State(
                 timerToken: token,
-                timerIntervalSeconds: $0.settings.autoIncrementSpeed
+                timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
             )
         }
 

@@ -88,14 +88,14 @@ struct SettingsView: View {
                                                 Text("Auto-Increment Speed")
                                                     .font(.headline)
 
-                                                Text("Timer interval in seconds")
+                                                Text("Ticks per second")
                                                     .font(.caption)
                                                     .foregroundStyle(palette.inkSubtle)
                                             }
 
                                             Spacer()
 
-                                            Text("\(store.autoIncrementSpeed, specifier: "%.0f")s")
+                                            Text("\(store.autoIncrementSpeed, specifier: "%.0f")x")
                                                 .font(.headline.monospacedDigit())
                                                 .foregroundStyle(palette.accent)
                                         }
@@ -105,7 +105,7 @@ struct SettingsView: View {
                                             in: 1.0...15.0,
                                             step: 1.0
                                         ) {
-                                            Text("Interval")
+                                            Text("Speed")
                                                 .font(.subheadline)
                                                 .foregroundStyle(palette.inkSubtle)
                                         }

@@ -105,7 +105,10 @@ struct AppFeature {
 
             case .optionalCounterToggleTapped:
                 state.optionalCounter = state.optionalCounter == nil
-                    ? CounterFeature.State(timerToken: uuid())
+                    ? CounterFeature.State(
+                        timerToken: uuid(),
+                        timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
+                    )
                     : nil
                 return .none
 
@@ -116,7 +119,7 @@ struct AppFeature {
                 state.destination = .counterSheet(
                     CounterFeature.State(
                         timerToken: uuid(),
-                        timerIntervalSeconds: state.settings.autoIncrementSpeed
+                        timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
                     )
                 )
                 return .none
@@ -125,7 +128,7 @@ struct AppFeature {
                 state.destination = .counterFullScreenCover(
                     CounterFeature.State(
                         timerToken: uuid(),
-                        timerIntervalSeconds: state.settings.autoIncrementSpeed
+                        timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
                     )
                 )
                 return .none
@@ -136,20 +139,23 @@ struct AppFeature {
 
             case .settings(.autoIncrementSpeedChanged):
                 let speed = state.settings.autoIncrementSpeed
-                state.primaryCounter.timerIntervalSeconds = speed
-                state.firstCounter.timerIntervalSeconds = speed
-                state.secondCounter.timerIntervalSeconds = speed
-                state.optionalCounter?.timerIntervalSeconds = speed
+                var effects: [Effect<Action>] = [
+                    .send(.primaryCounter(.timerSpeedChanged(speed))),
+                    .send(.firstCounter(.timerSpeedChanged(speed))),
+                    .send(.secondCounter(.timerSpeedChanged(speed))),
+                ]
 
-                if case .counterSheet(var counterState) = state.destination {
-                    counterState.timerIntervalSeconds = speed
-                    state.destination = .counterSheet(counterState)
-                } else if case .counterFullScreenCover(var counterState) = state.destination {
-                    counterState.timerIntervalSeconds = speed
-                    state.destination = .counterFullScreenCover(counterState)
+                if state.optionalCounter != nil {
+                    effects.append(.send(.optionalCounter(.timerSpeedChanged(speed))))
                 }
 
-                return .none
+                if case .counterSheet = state.destination {
+                    effects.append(.send(.destination(.presented(.counterSheet(.timerSpeedChanged(speed))))))
+                } else if case .counterFullScreenCover = state.destination {
+                    effects.append(.send(.destination(.presented(.counterFullScreenCover(.timerSpeedChanged(speed))))))
+                }
+
+                return .merge(effects)
             }
         }
         .ifLet(\.optionalCounter, action: \.optionalCounter) {

@@ -45,6 +45,7 @@ struct CounterFeature {
         case factButtonTapped
         case incrementTapped
         case timerButtonTapped
+        case timerSpeedChanged(Double)
         case factResponseReceived(String)
         case factRequestFailed(String)
         case resetTapped
@@ -85,16 +86,25 @@ struct CounterFeature {
                 state.isTimerRunning.toggle()
 
                 if state.isTimerRunning {
-                    let intervalSeconds = state.timerIntervalSeconds
-                    return .run { send in
-                        for await _ in await self.clock.timer(interval: .seconds(intervalSeconds)) {
-                            await send(.timerTicked)
-                        }
-                    }
-                    .cancellable(id: CancelID.timer(state.timerToken), cancelInFlight: true)
+                    return self.timerEffect(
+                        intervalSeconds: state.timerIntervalSeconds,
+                        token: state.timerToken
+                    )
                 } else {
                     return .cancel(id: CancelID.timer(state.timerToken))
                 }
+
+            case let .timerSpeedChanged(speed):
+                let safeSpeed = max(speed, 0.1)
+                state.timerIntervalSeconds = 1.0 / safeSpeed
+
+                if state.isTimerRunning {
+                    return self.timerEffect(
+                        intervalSeconds: state.timerIntervalSeconds,
+                        token: state.timerToken
+                    )
+                }
+                return .none
 
             case let .factResponseReceived(fact):
                 state.factText = fact
@@ -124,5 +134,14 @@ struct CounterFeature {
                 }
             }
         }
+    }
+
+    private func timerEffect(intervalSeconds: Double, token: UUID) -> Effect<Action> {
+        .run { send in
+            for await _ in await self.clock.timer(interval: .seconds(intervalSeconds)) {
+                await send(.timerTicked)
+            }
+        }
+        .cancellable(id: CancelID.timer(token), cancelInFlight: true)
     }
 }
