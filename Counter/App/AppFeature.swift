@@ -95,7 +95,12 @@ struct AppFeature {
 
         Reduce { state, action in
             switch action {
-            case .primaryCounter, .optionalCounter, .firstCounter, .secondCounter:
+            case .primaryCounter,
+                 .optionalCounter,
+                 .firstCounter,
+                 .secondCounter,
+                 .destination,
+                 .showSettings:
                 return .none
 
             case let .tabSelected(tab):
@@ -109,9 +114,6 @@ struct AppFeature {
                         timerIntervalSeconds: state.timerInterval
                     )
                     : nil
-                return .none
-
-            case .destination:
                 return .none
 
             case .showCounterInSheet:
@@ -130,9 +132,6 @@ struct AppFeature {
                         timerIntervalSeconds: state.timerInterval
                     )
                 )
-                return .none
-
-            case .showSettings:
                 return .none
 
             case .settings(.autoIncrementSpeedChanged):

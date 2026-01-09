@@ -12,7 +12,9 @@ import SwiftUI
 struct CounterApp: App {
     private let store = Store(initialState: AppFeature.State()) {
         AppFeature()
+        #if DEBUG
             ._printChanges()
+        #endif
     }
 
     var body: some Scene {
