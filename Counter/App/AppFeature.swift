@@ -12,10 +12,10 @@ import Foundation
 struct AppFeature {
     @ObservableState
     struct State: Equatable {
-        var primaryCounter = CounterFeature.State()
+        var primaryCounter = CounterFeature.State(timerToken: UUID())
         var optionalCounter: CounterFeature.State?
-        var firstCounter = CounterFeature.State()
-        var secondCounter = CounterFeature.State()
+        var firstCounter = CounterFeature.State(timerToken: UUID())
+        var secondCounter = CounterFeature.State(timerToken: UUID())
         var settings = SettingsFeature.State()
         var activeTab = Tab.primary
 
@@ -47,7 +47,7 @@ struct AppFeature {
         case showSettings
     }
 
-    @Dependency(\.uuid) var uuid
+    @Dependency(\.uuid) var uuidGenerator
 
     @Reducer
     struct Destination {
@@ -106,7 +106,7 @@ struct AppFeature {
             case .optionalCounterToggleTapped:
                 state.optionalCounter = state.optionalCounter == nil
                     ? CounterFeature.State(
-                        timerToken: uuid(),
+                        timerToken: uuidGenerator(),
                         timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
                     )
                     : nil
@@ -118,7 +118,7 @@ struct AppFeature {
             case .showCounterInSheet:
                 state.destination = .counterSheet(
                     CounterFeature.State(
-                        timerToken: uuid(),
+                        timerToken: uuidGenerator(),
                         timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
                     )
                 )
@@ -127,7 +127,7 @@ struct AppFeature {
             case .showCounterInFullScreenCover:
                 state.destination = .counterFullScreenCover(
                     CounterFeature.State(
-                        timerToken: uuid(),
+                        timerToken: uuidGenerator(),
                         timerIntervalSeconds: 1.0 / max(state.settings.autoIncrementSpeed, 0.1)
                     )
                 )

@@ -10,10 +10,12 @@ import ComposableArchitecture
 import Foundation
 import Testing
 
+private let counterToken = UUID(uuidString: "11111111-1111-1111-1111-111111111111")!
+
 @MainActor
 struct CounterTests {
     @Test func incrementTapped_increasesCount() async {
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         }
 
@@ -21,7 +23,7 @@ struct CounterTests {
     }
 
     @Test func decrementTapped_decreasesCount() async {
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         }
 
@@ -31,7 +33,7 @@ struct CounterTests {
     @Test func timer_emitsTicks_everySecond() async {
         let clock = TestClock()
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.continuousClock = clock
@@ -51,7 +53,7 @@ struct CounterTests {
     @Test func timer_cancelsOnStop_noFurtherTicks() async {
         let clock = TestClock()
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.continuousClock = clock
@@ -75,7 +77,7 @@ struct CounterTests {
     @Test func timer_canRestart_afterStop() async {
         let clock = TestClock()
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.continuousClock = clock
@@ -99,7 +101,7 @@ struct CounterTests {
     @Test func timerSpeedChange_updatesRunningTimerInterval() async {
         let clock = TestClock()
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.continuousClock = clock
@@ -123,7 +125,7 @@ struct CounterTests {
     }
 
     @Test func getFact_success_setsFact_andStopsLoading() async {
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.factClient.fetch = { "A cat has five toes." }
@@ -145,7 +147,7 @@ struct CounterTests {
             let errorDescription: String? = "Network down"
         }
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.factClient.fetch = { throw TestError() }
@@ -163,7 +165,7 @@ struct CounterTests {
     }
 
     @Test func getFact_twice_clearsPreviousFact_beforeSecondResponse() async {
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.factClient.fetch = { "Fact" } // same response is fine for behavior testing
@@ -192,7 +194,7 @@ struct CounterTests {
         let clock = TestClock()
         let resetUUID = UUID(uuidString: "5FBC4F47-60D0-4D82-BDE6-01B3C97C3A10")!
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.continuousClock = clock
@@ -223,7 +225,7 @@ struct CounterTests {
     @Test func dismissTapped_invokesDismissDependency() async {
         var dismissCount = 0
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.dismiss = DismissEffect {
@@ -241,7 +243,7 @@ struct CounterTests {
         let resetUUID = UUID(uuidString: "2F3B8961-0A9C-4FCD-9C85-1C34B0C61A9B")!
         var dismissCount = 0
 
-        let store = TestStore(initialState: CounterFeature.State()) {
+        let store = TestStore(initialState: CounterFeature.State(timerToken: counterToken)) {
             CounterFeature()
         } withDependencies: {
             $0.continuousClock = clock

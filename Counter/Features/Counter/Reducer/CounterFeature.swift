@@ -20,7 +20,7 @@ struct CounterFeature {
         var factText: String?
         var isFactLoading = false
         var isTimerRunning = false
-        var timerToken = UUID()
+        var timerToken: UUID
         var timerIntervalSeconds = 1.0
 
         init(
@@ -28,7 +28,7 @@ struct CounterFeature {
             factText: String? = nil,
             isFactLoading: Bool = false,
             isTimerRunning: Bool = false,
-            timerToken: UUID = UUID(),
+            timerToken: UUID,
             timerIntervalSeconds: Double = 1.0
         ) {
             self.value = value
@@ -56,7 +56,7 @@ struct CounterFeature {
     @Dependency(\.continuousClock) var clock
     @Dependency(\.factClient) var factClient
     @Dependency(\.dismiss) var dismiss
-    @Dependency(\.uuid) var uuid
+    @Dependency(\.uuid) var uuidGenerator
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -119,7 +119,7 @@ struct CounterFeature {
             case .resetTapped:
                 let timerToken = state.timerToken
                 state = State(
-                    timerToken: uuid(),
+                    timerToken: uuidGenerator(),
                     timerIntervalSeconds: state.timerIntervalSeconds
                 )
                 return .cancel(id: CancelID.timer(timerToken))

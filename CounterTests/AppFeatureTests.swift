@@ -10,6 +10,8 @@ import ComposableArchitecture
 import Foundation
 import Testing
 
+private let appFeatureToken = UUID(uuidString: "22222222-2222-2222-2222-222222222222")!
+
 @MainActor
 struct AppFeatureTests {
     @Test func tabSelection_updatesActiveTab() async {
@@ -35,18 +37,16 @@ struct AppFeatureTests {
     }
 
     @Test func showCounterInSheet_setsDestination() async {
-        let token = UUID(uuidString: "3F5E9E54-7C59-4B1B-9A79-6A4E8E1D4C9F")!
-
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         await store.send(.showCounterInSheet) {
             $0.destination = .counterSheet(
                 CounterFeature.State(
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -54,18 +54,16 @@ struct AppFeatureTests {
     }
 
     @Test func showCounterInFullScreenCover_setsDestination() async {
-        let token = UUID(uuidString: "7D5B2F8D-0D75-4C2B-ABED-4E1F79BB0663")!
-
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         await store.send(.showCounterInFullScreenCover) {
             $0.destination = .counterFullScreenCover(
                 CounterFeature.State(
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -83,19 +81,17 @@ struct AppFeatureTests {
     }
 
     @Test func destination_canSwitchBetweenDifferentCases() async {
-        let token = UUID(uuidString: "48C1D4D5-8AE6-4A94-89D7-40B6F00C53A6")!
-
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         // Open sheet
         await store.send(.showCounterInSheet) {
             $0.destination = .counterSheet(
                 CounterFeature.State(
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -105,7 +101,7 @@ struct AppFeatureTests {
         await store.send(.showCounterInFullScreenCover) {
             $0.destination = .counterFullScreenCover(
                 CounterFeature.State(
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -118,16 +114,14 @@ struct AppFeatureTests {
     }
 
     @Test func optionalCounterToggle_createsAndClearsOptionalCounter() async {
-        let token = UUID(uuidString: "B5BEB4A3-8B2A-45E4-8C45-0BA60B7B54B4")!
-
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         await store.send(.optionalCounterToggleTapped) {
-            $0.optionalCounter = CounterFeature.State(timerToken: token)
+            $0.optionalCounter = CounterFeature.State(timerToken: appFeatureToken)
         }
 
         await store.send(.optionalCounterToggleTapped) {
@@ -136,16 +130,14 @@ struct AppFeatureTests {
     }
 
     @Test func optionalCounter_canBeToggledMultipleTimes() async {
-        let token = UUID(uuidString: "9D63CC7A-4F4D-4A2C-9B5D-06EACFF9A5B9")!
-
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         await store.send(.optionalCounterToggleTapped) {
-            $0.optionalCounter = CounterFeature.State(timerToken: token)
+            $0.optionalCounter = CounterFeature.State(timerToken: appFeatureToken)
         }
 
         await store.send(.optionalCounterToggleTapped) {
@@ -153,15 +145,15 @@ struct AppFeatureTests {
         }
 
         await store.send(.optionalCounterToggleTapped) {
-            $0.optionalCounter = CounterFeature.State(timerToken: token)
+            $0.optionalCounter = CounterFeature.State(timerToken: appFeatureToken)
         }
     }
 
     @Test func combinedTotal_sumsFirstAndSecondCounters() async {
         let store = TestStore(
             initialState: AppFeature.State(
-                firstCounter: CounterFeature.State(value: 5),
-                secondCounter: CounterFeature.State(value: 10)
+                firstCounter: CounterFeature.State(value: 5, timerToken: appFeatureToken),
+                secondCounter: CounterFeature.State(value: 10, timerToken: appFeatureToken)
             )
         ) {
             AppFeature()
@@ -201,18 +193,16 @@ struct AppFeatureTests {
     }
 
     @Test func destinationCounter_canBeInteractedWith() async {
-        let token = UUID(uuidString: "E8B0A7E8-4BFA-4A1B-A0A7-5C0A6D1DEB77")!
-
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         await store.send(.showCounterInSheet) {
             $0.destination = .counterSheet(
                 CounterFeature.State(
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -222,7 +212,7 @@ struct AppFeatureTests {
             $0.destination = .counterSheet(
                 CounterFeature.State(
                     value: 1,
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -232,7 +222,7 @@ struct AppFeatureTests {
             $0.destination = .counterSheet(
                 CounterFeature.State(
                     value: 0,
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -240,13 +230,11 @@ struct AppFeatureTests {
     }
 
     @Test func destinationDismissal_clearsDestination() async {
-        let token = UUID(uuidString: "4F29F8E1-4A8A-4D55-8C33-8B93C7AEBB1B")!
-
         let store = TestStore(
             initialState: AppFeature.State(
                 destination: .counterSheet(
                     CounterFeature.State(
-                        timerToken: token,
+                        timerToken: appFeatureToken,
                         timerIntervalSeconds: 1.0
                     )
                 )
@@ -265,20 +253,19 @@ struct AppFeatureTests {
 
     @Test func timerInDestination_cancelledOnDismiss() async {
         let clock = TestClock()
-        let token = UUID(uuidString: "6A40D5E1-1C5A-4E63-BB14-7746C8A5A22E")!
 
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
             $0.continuousClock = clock
             $0.dismiss = DismissEffect {}
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         await store.send(.showCounterInSheet) {
             $0.destination = .counterSheet(
                 CounterFeature.State(
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -288,7 +275,7 @@ struct AppFeatureTests {
             $0.destination = .counterSheet(
                 CounterFeature.State(
                     isTimerRunning: true,
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -300,7 +287,7 @@ struct AppFeatureTests {
                 CounterFeature.State(
                     value: 1,
                     isTimerRunning: true,
-                    timerToken: token,
+                    timerToken: appFeatureToken,
                     timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
                 )
             )
@@ -318,17 +305,15 @@ struct AppFeatureTests {
     }
 
     @Test func optionalCounter_interactsIndependentlyFromPrimaryCounter() async {
-        let token = UUID(uuidString: "D6BDA8E2-8E2D-4F16-9DB6-8E2F7E5ED1CF")!
-
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
-            $0.uuid = UUIDGenerator { token }
+            $0.uuid = UUIDGenerator { appFeatureToken }
         }
 
         await store.send(.optionalCounterToggleTapped) {
             $0.optionalCounter = CounterFeature.State(
-                timerToken: token,
+                timerToken: appFeatureToken,
                 timerIntervalSeconds: 1.0 / max($0.settings.autoIncrementSpeed, 0.1)
             )
         }

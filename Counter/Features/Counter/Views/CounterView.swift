@@ -148,7 +148,7 @@ private struct CounterFactCard: View {
 
 #Preview {
     CounterView(
-        store: Store(initialState: CounterFeature.State()) {
+        store: Store(initialState: CounterFeature.State(timerToken: UUID())) {
             CounterFeature()
         }
     )
